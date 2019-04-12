@@ -1,11 +1,8 @@
 package presentacion;
 
 import javax.swing.SwingUtilities;
-/*import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;*/
 
 import negocio.MainModel;
-import negocio.SAGestionRecursos;
 
 public class Main {
 
