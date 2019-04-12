@@ -2,12 +2,12 @@ package presentacion;
 
 import negocio.MainModel;
 
-public class Controlador {
+public class MainController implements Controller{
 	
 	private MainView view;
 	private MainModel model;
 
-	public Controlador(MainView mainView, MainModel mainModel) {
+	public MainController(MainView mainView, MainModel mainModel) {
 		view = mainView;
 		model = mainModel;
 		setup();
@@ -30,9 +30,10 @@ public class Controlador {
 	void updateTitleText(String title){
 		model.setTitulo(title);
 	}
-	
+
+	@Override
 	public void run() {
-		view.mostrarUI();
+		view.mostrarUI();		
 	}
 	
 }

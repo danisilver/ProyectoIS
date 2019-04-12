@@ -1,9 +1,21 @@
 package negocio;
 
 import integracion.Compra;
+import integracion.DaoRecurso;
 import integracion.RecursoAudioVisual;
+import integracion.TipoFactoria;
+import presentacion.MainController;
+import integracion.FactoriaDAO;
 
-public class GestionRecursos {
+public class SAGestionRecursos implements ServicioDeAplicacion{
+	
+	FactoriaDAO daoFactory = FactoriaDAO.crearFactoria(TipoFactoria.H2DBFactory);
+	
+	private DaoRecurso daoRecursoAudiovisual = daoFactory.getDaoRecurso();
+
+	public SAGestionRecursos(MainController controlador) {
+		
+	}
 	
 	public void comprarRecurso(int idRecurso) {
 		//TODO: implementar
@@ -11,8 +23,7 @@ public class GestionRecursos {
 	}
 	
 	public RecursoAudioVisual consultarRecursoAudiovisual(int idRecurso){
-		//TODO: implementar
-		throw new UnsupportedOperationException();
+		return daoRecursoAudiovisual.getRecursoById(idRecurso);
 	}
 	
 	public Compra[] consultarCompras() {

@@ -5,6 +5,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UnsupportedLookAndFeelException;*/
 
 import negocio.MainModel;
+import negocio.SAGestionRecursos;
 
 public class Main {
 
@@ -12,9 +13,11 @@ public class Main {
 		
 		//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
+		//SAGestionRecursos servicioDeAplicacion = new SAGestionRecursos(null);
+		
 		MainModel mainModel = new MainModel();
 		MainView mainView = new MainView(mainModel);
-		Controlador controlador = new Controlador(mainView, mainModel);
+		MainController controlador = new MainController(mainView, mainModel);
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override public void run() {

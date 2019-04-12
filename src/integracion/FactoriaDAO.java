@@ -1,18 +1,17 @@
 package integracion;
 
-import integracion.FactoriaDAOImp;
-
 public abstract class FactoriaDAO {
 	
-	static FactoriaDAO instancia= null;
-	
-	static public FactoriaDAO getInstancia()
-	{
-		if (instancia == null) instancia= new FactoriaDAOImp();
-		
-		return instancia;
+	public static FactoriaDAO crearFactoria(TipoFactoria tipo) {
+		return null;
 	}
 	
-	public abstract DAOClientes nuevoDAOClientes();
+	public abstract DaoRecurso getDaoRecurso();
+	
+	public abstract DaoCompra getDaoCompra();
+	
+	public abstract DaoAveria getDaoAveria();
+	
+	public abstract DaoMontaje getDaoMontaje();
 
 }

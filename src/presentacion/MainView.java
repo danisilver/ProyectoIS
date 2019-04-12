@@ -62,8 +62,9 @@ public class MainView extends JFrame implements View {
 		btnCambiar.addActionListener(e -> btnCambiarPressed.notifyAllObservers());		
 	}
 
+	@Override
 	public void updateView() {
-		setTitle(model.getTitle());
+		setTitle(model.getTitle());		
 	}
 
 	public String getTextTitle() {
