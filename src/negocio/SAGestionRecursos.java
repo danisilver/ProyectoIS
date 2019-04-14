@@ -1,20 +1,29 @@
 package negocio;
 
+import java.util.ArrayList;
+
 import integracion.Compra;
 import integracion.DaoRecurso;
+import integracion.FactoriaDAO;
 import integracion.RecursoAudioVisual;
 import integracion.TipoFactoria;
-import presentacion.MainController;
-import integracion.FactoriaDAO;
 
 public class SAGestionRecursos implements ServicioDeAplicacion{
 	
-	FactoriaDAO daoFactory = FactoriaDAO.crearFactoria(TipoFactoria.H2DBFactory);
-	
-	private DaoRecurso daoRecursoAudiovisual = daoFactory.getDaoRecurso();
+	public FactoriaDAO daoFactory;
+	public DaoRecurso daoRecursoAudiovisual;
 
-	public SAGestionRecursos(MainController controlador) {
-		
+	public SAGestionRecursos() {
+		daoFactory = FactoriaDAO.crearFactoria(TipoFactoria.H2DBFactory);
+		daoRecursoAudiovisual = daoFactory.getDaoRecurso();
+	}
+	
+	public ArrayList<RecursoAudioVisual> getListaRecursos() {
+		return daoRecursoAudiovisual.getRecursosAudiovisuales();
+	}
+	
+	public ArrayList<RecursoAudioVisual> getListaRecursosVenta() {
+		return null;
 	}
 	
 	public void comprarRecurso(int idRecurso) {

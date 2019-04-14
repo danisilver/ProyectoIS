@@ -3,6 +3,7 @@ package presentacion;
 import negocio.ComprarRecursosModel;
 import negocio.ConsultarRecursosModel;
 import negocio.MainModel;
+import negocio.SAGestionRecursos;
 
 public class MainController implements Controller{
 	
@@ -14,27 +15,30 @@ public class MainController implements Controller{
 	private ComprarRecursosModel comprarRecursosModel;
 	private ComprarRecursosView comprarRecursosView;
 	private ComprarRecursosController comprarRecursosController;
+	private SAGestionRecursos servicioSGRA;
 
 	public MainController(MainView mainView, MainModel mainModel) {
 		view = mainView;
 		model = mainModel;
 		
+		servicioSGRA = new SAGestionRecursos();
+		
 		/* vista consultarRecursos */
-		consultarRecursosModel = new ConsultarRecursosModel();
+		consultarRecursosModel = new ConsultarRecursosModel(servicioSGRA.getListaRecursos());
 		consultarRecursosView = new ConsultarRecursosView(consultarRecursosModel);
 		consultarRecursosController = new ConsultarRecursosController(consultarRecursosView, consultarRecursosModel);
 		consultarRecursosController.run();
 		
 		/* vista comprar recursos */
-		comprarRecursosModel = new ComprarRecursosModel();
+		comprarRecursosModel = new ComprarRecursosModel(servicioSGRA.getListaRecursos());
 		comprarRecursosView = new ComprarRecursosView(comprarRecursosModel);
 		comprarRecursosController = new ComprarRecursosController(comprarRecursosView, comprarRecursosModel);
 		comprarRecursosController.run();
 		
-		setup();
+		setupHandlers();
 	}
 	
-	void setup() {
+	void setupHandlers() {
 		view.btnCambiarPressed.addObserver(new Observer() {
 			@Override public void update() {
 				updateTitleText(view.getTextTitle());

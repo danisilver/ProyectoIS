@@ -6,31 +6,23 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
-public class Compra {
-	
+public class Montaje {
+
 	@DatabaseField(generatedId = true)
-	private Integer idCompra;
+	private Integer idMontaje;
 	
 	@DatabaseField(foreign = true)
 	private RecursoAudioVisual idRecurso;
 	
 	@DatabaseField
-	private Timestamp fechaAdquisicion;
-
-	public Integer getIdCompra() {
-		return idCompra;
+	private Timestamp fechaMontaje;
+	
+	public Integer getIdMontaje() {
+		return idMontaje;
 	}
 
-	public void setIdCompra(Integer idCompra) {
-		this.idCompra = idCompra;
-	}
-
-	public Timestamp getFechaAdquisicion() {
-		return fechaAdquisicion;
-	}
-
-	public void setFechaAdquisicion(Timestamp fechaAdquisicion) {
-		this.fechaAdquisicion = fechaAdquisicion;
+	public void setIdMontaje(Integer idMontaje) {
+		this.idMontaje = idMontaje;
 	}
 
 	public RecursoAudioVisual getIdRecurso() {
@@ -40,4 +32,13 @@ public class Compra {
 	public void setIdRecurso(RecursoAudioVisual idRecurso) {
 		this.idRecurso = idRecurso;
 	}
+
+	public Timestamp getFechaMontaje() {
+		return fechaMontaje;
+	}
+
+	public void setFechaMontaje(Timestamp fechaMontaje) {
+		this.fechaMontaje = fechaMontaje;
+	}
+	
 }

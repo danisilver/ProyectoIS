@@ -1,5 +1,89 @@
 package negocio;
 
-public class ConsultarRecursosModel implements Model {
+import java.util.ArrayList;
+
+import javax.swing.table.AbstractTableModel;
+
+import integracion.RecursoAudioVisual;
+import presentacion.Event;
+
+public class ConsultarRecursosModel extends AbstractTableModel implements Model {
+	
+	private String[] colNames = {"Nombre", "Tipo", "Unidades", "montable", "fecha Adquisicion", "coste"};
+	
+	public Event onItemAdded = new Event();
+	public Event onItemRemoved = new Event();
+	public Event onModelChanged = new Event();
+	
+
+	private ArrayList<RecursoAudioVisual> arrRecursos;
+
+	public ConsultarRecursosModel(ArrayList<RecursoAudioVisual> listaRecursos) {
+		this.setListaRecursos(listaRecursos);
+	}
+
+	public ArrayList<RecursoAudioVisual> getListaRecursos() {
+		return arrRecursos;
+	}
+
+	public void setListaRecursos(ArrayList<RecursoAudioVisual> listaRecursos) {
+		this.arrRecursos = listaRecursos;
+		onModelChanged.notifyAllObservers();
+	}
+
+	@Override
+	public int getColumnCount() {
+		return colNames.length;
+	}
+
+	@Override
+	public int getRowCount() {
+		return arrRecursos.size();
+	}
+
+	@Override
+	public Object getValueAt(int row, int col) {
+		Object toreturn = new Object();
+		switch (col) {
+		case 0:
+			toreturn = arrRecursos.get(row).getNombre(); 
+			break;
+		case 1:
+			toreturn = arrRecursos.get(row).getTipo();
+			break;
+		case 2:
+			toreturn = arrRecursos.get(row).getUnidades();
+			break;
+		case 3:
+			toreturn = arrRecursos.get(row).isMontable() ? "SI" : "NO";
+			break;
+		case 4:
+			toreturn = arrRecursos.get(row).getFechaAdquisicion();
+			break;
+		case 5:
+			toreturn = arrRecursos.get(row).getPrecio();
+		default:
+			break;
+		}
+		return toreturn;
+	}
+	
+	@Override
+	public String getColumnName(int column) {
+		return colNames[column];
+	}
+	
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		return false;
+	}
+	
+	public void remove(int index) {
+		arrRecursos.remove(index);
+		onItemRemoved.notifyAllObservers();
+		onModelChanged.notifyAllObservers();
+		fireTableDataChanged();
+		fireTableRowsDeleted(index, index);
+	}
 	
 }

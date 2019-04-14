@@ -1,16 +1,16 @@
 package presentacion;
 
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import negocio.MainModel;
 
 public class Main {
 
-	public static void main(String[] args) /* throws Exception */{
+	public static void main(String[] args) throws Exception {
 		
-		//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
-		//SAGestionRecursos servicioDeAplicacion = new SAGestionRecursos(null);
 		
 		MainModel mainModel = new MainModel();
 		MainView mainView = new MainView(mainModel);

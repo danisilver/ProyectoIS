@@ -61,9 +61,9 @@ public class MainView extends JFrame implements View {
 		
 		btnComprar = new JButton("comprar recurso");
 		btnConsultar = new JButton("consultar recurso");
-		btnAsignar = new JButton("asignar a proyecto");
-		btnSolicitar = new JButton("solicitar recurso");
-		btnAveria = new JButton("nueva averia");
+		btnAsignar = new JButton("asignar a un proyecto");
+		btnSolicitar = new JButton("solicitar un recurso");
+		btnAveria = new JButton("lista de averias");
 		btnVolverPrincipal = new JButton("volver");
 		personalizarBotonesOperaciones();
 		
@@ -72,9 +72,9 @@ public class MainView extends JFrame implements View {
 		
 		mainViewOperationsPanel.add(btnComprar); 
 		mainViewOperationsPanel.add(btnConsultar);
+		mainViewOperationsPanel.add(btnAveria);
 		mainViewOperationsPanel.add(btnAsignar); 
 		mainViewOperationsPanel.add(btnSolicitar); 
-		mainViewOperationsPanel.add(btnAveria);
 		
 		/* panel de customizacion y interno */
 		JPanel customizationPanel = new JPanel();
