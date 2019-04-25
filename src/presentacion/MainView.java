@@ -2,7 +2,11 @@ package presentacion;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,21 +21,21 @@ public class MainView extends JFrame implements View {
 	
 	private static final long serialVersionUID = 1L;
 	
-	JTextField tfTitle;
-	JButton btnCambiar;
+	private JTextField tfTitle;
+	private JButton btnCambiar;
 	
 	public Event btnCambiarPressed = new Event();
 	public Event btnConsultarPressed = new Event();
 	public Event btnComprarPressed = new Event();
 	public Event btnVolverPressed = new Event();
-	
+	public Event btnAveriasPressed = new Event();
 	
 	private MainModel model;
 	private JButton btnComprar;
 	private JButton btnConsultar;
 	private JButton btnAsignar;
 	private JButton btnSolicitar;
-	private JButton btnAveria;
+	private JButton btnAverias;
 
 	private JPanel mainPanel;
 
@@ -41,19 +45,25 @@ public class MainView extends JFrame implements View {
 		this.model = mainModel;
 		
 		setupMainPanelComponents();
-		
-		/* configuracion general de ventana */
+		((JComponent)getContentPane()).setBorder(BorderFactory.createEmptyBorder());
 		setTitle("pagina principal del subsistema");
 		setPreferredSize(new Dimension(700,400));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		pack();
 		
-		/* configuracion de vista para no congestionar el constructor */
-		setup();
+		setupHandlers();
+		
+		personalizarUI();
 		
 		setVisible(true);
 	}
 	
+	private void personalizarUI() {
+		try {
+			setIconImage(ImageIO.read(new File("imagenes/icon.png")));
+		} catch (Exception e) { e.printStackTrace(); }
+	}
+
 	void setupMainPanelComponents(){
 		JPanel mainViewOperationsPanel = new JPanel();
 		mainViewOperationsPanel.setLayout(new BoxLayout(mainViewOperationsPanel, BoxLayout.X_AXIS));
@@ -63,7 +73,7 @@ public class MainView extends JFrame implements View {
 		btnConsultar = new JButton("consultar recurso");
 		btnAsignar = new JButton("asignar a un proyecto");
 		btnSolicitar = new JButton("solicitar un recurso");
-		btnAveria = new JButton("lista de averias");
+		btnAverias = new JButton("historial de averias");
 		btnVolverPrincipal = new JButton("volver");
 		personalizarBotonesOperaciones();
 		
@@ -72,7 +82,7 @@ public class MainView extends JFrame implements View {
 		
 		mainViewOperationsPanel.add(btnComprar); 
 		mainViewOperationsPanel.add(btnConsultar);
-		mainViewOperationsPanel.add(btnAveria);
+		mainViewOperationsPanel.add(btnAverias);
 		mainViewOperationsPanel.add(btnAsignar); 
 		mainViewOperationsPanel.add(btnSolicitar); 
 		
@@ -99,27 +109,28 @@ public class MainView extends JFrame implements View {
 		btnConsultar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
 		btnAsignar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
 		btnSolicitar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
-		btnAveria.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+		btnAverias.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
 		/* para que salgan centrados en el eje x hay que ponerles un alto minimo */
 		btnComprar.setMinimumSize(new Dimension(0, 100));
 		btnConsultar.setMinimumSize(new Dimension(0, 100));
 		btnAsignar.setMinimumSize(new Dimension(0, 100));
 		btnSolicitar.setMinimumSize(new Dimension(0, 100));
-		btnAveria.setMinimumSize(new Dimension(0, 100));
+		btnAverias.setMinimumSize(new Dimension(0, 100));
 		/* para que se repartan igual espacio horizontal */
 		btnComprar.setPreferredSize(new Dimension(10,100));
 		btnConsultar.setPreferredSize(new Dimension(10,100));
 		btnAsignar.setPreferredSize(new Dimension(10,100));
 		btnSolicitar.setPreferredSize(new Dimension(10,100));
-		btnAveria.setPreferredSize(new Dimension(10,100));
+		btnAverias.setPreferredSize(new Dimension(10,100));
 	}
 
-	private void setup() {
+	private void setupHandlers() {
 		//adaptador de ActionListener a Event
 		btnCambiar.addActionListener(e -> btnCambiarPressed.notifyAllObservers());		
 		btnConsultar.addActionListener(e -> btnConsultarPressed.notifyAllObservers());
 		btnComprar.addActionListener(e -> btnComprarPressed.notifyAllObservers());
 		btnVolverPrincipal.addActionListener(e -> btnVolverPressed.notifyAllObservers());
+		btnAverias.addActionListener(e -> btnAveriasPressed.notifyAllObservers());
 	}
 
 	@Override
@@ -155,35 +166,5 @@ public class MainView extends JFrame implements View {
 		revalidate();
 		repaint();
 	}
-	
+
 }
-
-/*
- * para expandir el boton en boxlayout
- * btnComprar.setMaximumSize(getContentPane().getMaximumSize());
- */
-
-/* para evitar que el jtextfield se expanda cuando se expande la ventana */
-/* tfTitle.setMaximumSize(tfTitle.getPreferredSize()); */
-
-/*
- * para poner borde
- * titulo.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
- */
-
-
-/* para ajustar los paneles principales */
-/*
- * mainViewOperationsPanel.setPreferredSize(new Dimension(100,80));
- * customizationPanel.setPreferredSize(new Dimension(100, 20));
- */
-
-/* texto de creditos */
-/*
- * JPanel vbox = new JPanel(); vbox.add(btnCambiar); vbox.add(tfTitle);
- * customizationPanel.add(vbox); JLabel jltexto = new JLabel();//cuadro de
- * creditos jltexto.setHorizontalAlignment(JLabel.CENTER);
- * jltexto.setAlignmentX(0.5f); jltexto.
- * setText("<html><center>version 1.0<br>github.com/danisilver/proyectoIS<br>mariodga@ucm.es</center></html>"
- * ); customizationPanel.add(jltexto);
- */

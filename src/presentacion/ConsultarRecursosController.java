@@ -15,35 +15,10 @@ public class ConsultarRecursosController implements Controller {
 	}
 	
 	private void setupHandlers() {
-		view.btnDetallesPressed.addObserver(new Observer() {
-			@Override public void update() {
-				if(view.isDetallesEnabled()) {
-					view.ocultarDetalles();
-				} else {
-					view.mostrarDetalles();
-				}
-			}
-		});
-		view.btnAveriaPressed.addObserver(new Observer() {
-			@Override public void update() {
-				view.mostrarAsistenteAveria();
-			}
-		});
-		view.btnMontajePressed.addObserver(new Observer() {
-			@Override public void update() {
-				view.mostraAsistenteMontaje();
-			}
-		});
-		view.btnRetirarPressed.addObserver(new Observer() {
-			@Override public void update() {
-				model.remove(view.getSelectedItemIndex());
-			}
-		});
-		model.onItemRemoved.addObserver(new Observer() {
-			@Override public void update() {
-				view.updateView();
-			}
-		});
+		view.btnDetallesPressed.addObserver(()->model.setDetailsState(!model.getDetailsState()));
+		view.btnDetallesPressed.addObserver(()->view.updateView());
+		view.btnRetirarPressed.addObserver(()->model.remove(view.getSelectedItemIndex()));
+		model.onItemRemoved.addObserver(()->view.updateView());
 	}
 
 	@Override

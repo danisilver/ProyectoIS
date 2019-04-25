@@ -2,41 +2,43 @@ package integracion;
 
 import java.sql.SQLException;
 
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
+import presentacion.Main;
 
 public class H2FactoriaDAO extends FactoriaDAO{
-	String databaseUrl = "jdbc:h2:file:./database";
-	ConnectionSource connectionSource;
 	
 	public H2FactoriaDAO() {
-		try {
-			connectionSource = new JdbcConnectionSource(databaseUrl);
-			
-			
-		} catch (SQLException e) {
-			System.err.println("cannot create H2FactoriaDAO");
-			e.printStackTrace();
-		} 
+		
 	}
 
 	@Override
 	public DaoRecurso getDaoRecurso() {
-		return new H2DaoRecurso(connectionSource);
+		try {
+			return new H2DaoRecurso(Main.connectionSource);
+		} catch (SQLException e) { e.printStackTrace(); }
+		return null;
 	}
 
 	@Override
 	public DaoCompra getDaoCompra() {
+		try {
+			return new H2DaoCompra(Main.connectionSource);
+		} catch (SQLException e) { e.printStackTrace(); }
 		return null;
 	}
 
 	@Override
 	public DaoAveria getDaoAveria() {
+		try {
+			return new H2DaoAveria(Main.connectionSource);
+		} catch (SQLException e) { e.printStackTrace(); }
 		return null;
 	}
 
 	@Override
 	public DaoMontaje getDaoMontaje() {
+		try {
+			return new H2DaoMontaje(Main.connectionSource);
+		} catch (SQLException e) { e.printStackTrace(); }
 		return null;
 	}
 

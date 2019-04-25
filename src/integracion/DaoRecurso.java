@@ -1,13 +1,11 @@
 package integracion;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public interface DaoRecurso {
+import com.j256.ormlite.dao.Dao;
+
+public interface DaoRecurso extends Dao<RecursoAudioVisual, Integer>{
 	
-	public RecursoAudioVisual getRecursoById(int idRecurso);
-
-	public void create(RecursoAudioVisual recurso);
-
-	public ArrayList<RecursoAudioVisual> getRecursosAudiovisuales();
+	public List<RecursoAudioVisual> getRecursosAudiovisuales();
 	
 }

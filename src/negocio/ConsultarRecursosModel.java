@@ -1,6 +1,6 @@
 package negocio;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -9,26 +9,28 @@ import presentacion.Event;
 
 public class ConsultarRecursosModel extends AbstractTableModel implements Model {
 	
-	private String[] colNames = {"Nombre", "Tipo", "Unidades", "montable", "fecha Adquisicion", "coste"};
+	private String[] colNames = {"Nombre", "Tipo", "montable", "fecha Adquisicion", "coste"};
 	
 	public Event onItemAdded = new Event();
 	public Event onItemRemoved = new Event();
 	public Event onModelChanged = new Event();
 	
 
-	private ArrayList<RecursoAudioVisual> arrRecursos;
+	private List<RecursoAudioVisual> arrRecursos;
+	private boolean detailsEnabled;
 
-	public ConsultarRecursosModel(ArrayList<RecursoAudioVisual> listaRecursos) {
+	public ConsultarRecursosModel(List<RecursoAudioVisual> listaRecursos) {
 		this.setListaRecursos(listaRecursos);
+		detailsEnabled = false;
 	}
 
-	public ArrayList<RecursoAudioVisual> getListaRecursos() {
+	public List<RecursoAudioVisual> getListaRecursos() {
 		return arrRecursos;
 	}
 
-	public void setListaRecursos(ArrayList<RecursoAudioVisual> listaRecursos) {
+	public void setListaRecursos(List<RecursoAudioVisual> listaRecursos) {
 		this.arrRecursos = listaRecursos;
-		onModelChanged.notifyAllObservers();
+		fireTableDataChanged();
 	}
 
 	@Override
@@ -52,15 +54,12 @@ public class ConsultarRecursosModel extends AbstractTableModel implements Model 
 			toreturn = arrRecursos.get(row).getTipo();
 			break;
 		case 2:
-			toreturn = arrRecursos.get(row).getUnidades();
-			break;
-		case 3:
 			toreturn = arrRecursos.get(row).isMontable() ? "SI" : "NO";
 			break;
-		case 4:
+		case 3:
 			toreturn = arrRecursos.get(row).getFechaAdquisicion();
 			break;
-		case 5:
+		case 4:
 			toreturn = arrRecursos.get(row).getPrecio();
 		default:
 			break;
@@ -79,11 +78,29 @@ public class ConsultarRecursosModel extends AbstractTableModel implements Model 
 	}
 	
 	public void remove(int index) {
+		if(index < 0) return;
 		arrRecursos.remove(index);
 		onItemRemoved.notifyAllObservers();
 		onModelChanged.notifyAllObservers();
 		fireTableDataChanged();
 		fireTableRowsDeleted(index, index);
+	}
+
+	public boolean getDetailsState() {
+		return detailsEnabled;
+	}
+
+	public void setDetailsState(boolean state) {
+		detailsEnabled = state;
+	}
+
+	@Override
+	public boolean isValid() {
+		return true;
+	}
+
+	public void addRecurso(RecursoAudioVisual recurso) {
+		arrRecursos.add(recurso);
 	}
 	
 }

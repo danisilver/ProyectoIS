@@ -1,48 +1,89 @@
 package negocio;
 
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
+import integracion.Averia;
 import integracion.Compra;
+import integracion.DaoAveria;
+import integracion.DaoCompra;
+import integracion.DaoMontaje;
 import integracion.DaoRecurso;
 import integracion.FactoriaDAO;
+import integracion.Montaje;
 import integracion.RecursoAudioVisual;
 import integracion.TipoFactoria;
 
 public class SAGestionRecursos implements ServicioDeAplicacion{
 	
-	public FactoriaDAO daoFactory;
-	public DaoRecurso daoRecursoAudiovisual;
+	private FactoriaDAO daoFactory;
+	private DaoRecurso daoRecursoAudiovisual;
+	private DaoAveria daoAveria;
+	private DaoCompra daoCompra;
+	private DaoMontaje daoMontaje;
 
 	public SAGestionRecursos() {
 		daoFactory = FactoriaDAO.crearFactoria(TipoFactoria.H2DBFactory);
 		daoRecursoAudiovisual = daoFactory.getDaoRecurso();
+		daoCompra = daoFactory.getDaoCompra();
+		daoAveria = daoFactory.getDaoAveria();
+		daoMontaje = daoFactory.getDaoMontaje();
 	}
 	
-	public ArrayList<RecursoAudioVisual> getListaRecursos() {
+	public List<RecursoAudioVisual> getListaRecursos() {
+		ArrayList<RecursoAudioVisual> arr = new ArrayList<RecursoAudioVisual>();
+		List<Compra> compras = daoCompra.getCompras();
+		for(Compra c : compras) arr.add(getRecurso(c.getRecurso().getId()));
+		return arr;
+	}
+	
+	public List<Averia> getListaAverias() {
+		return daoAveria.getAverias();
+	}
+	
+	public List<Montaje> getListaMontajes(){
+		List<Montaje> montaje = new ArrayList<>();
+		try {
+			montaje = daoMontaje.queryForAll();
+		} catch (SQLException e) { e.printStackTrace(); }
+		return montaje;
+	}
+
+	public List<RecursoAudioVisual> getListaRecursosVenta() {
 		return daoRecursoAudiovisual.getRecursosAudiovisuales();
 	}
 	
-	public ArrayList<RecursoAudioVisual> getListaRecursosVenta() {
+	public RecursoAudioVisual getRecurso(int idRecurso) {
+		try {
+			return daoRecursoAudiovisual.queryForId(idRecurso);
+		} catch (SQLException e) { e.printStackTrace(); }
 		return null;
 	}
 	
 	public void comprarRecurso(int idRecurso) {
-		//TODO: implementar
-		throw new UnsupportedOperationException();
+		RecursoAudioVisual recursoAudioVisual = new RecursoAudioVisual();
+		recursoAudioVisual.setId(idRecurso);
+		Compra c = new Compra();
+		c.setRecurso(recursoAudioVisual);
+		c.setFechaAdquisicion(new Timestamp(System.currentTimeMillis()));
+		try {
+			daoCompra.create(c);
+		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
 	public RecursoAudioVisual consultarRecursoAudiovisual(int idRecurso){
-		return daoRecursoAudiovisual.getRecursoById(idRecurso);
+		try {
+			return daoRecursoAudiovisual.queryForId(idRecurso);
+		} catch (SQLException e) { e.printStackTrace(); }
+		return null;
 	}
 	
-	public Compra[] consultarCompras() {
-		//TODO: implementar
-		throw new UnsupportedOperationException();
-	}
-	
-	public void informarAveria(int idRecurso) {
-		//TODO: implementar
-		throw new UnsupportedOperationException();
+	public void informarAveria(Averia averia) {
+		try {
+			daoAveria.create(averia);
+		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
 	public void solicitarMontaje(int idRecurso) {
@@ -53,5 +94,13 @@ public class SAGestionRecursos implements ServicioDeAplicacion{
 	public void asignarRecurso(int idRecurso) {
 		//TODO: implementar
 		throw new UnsupportedOperationException();
+	}
+
+	public void actualizarRecurso(RecursoAudioVisual recurso) {
+		try {
+			daoRecursoAudiovisual.update(recurso);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

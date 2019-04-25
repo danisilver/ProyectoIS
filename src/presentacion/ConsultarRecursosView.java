@@ -3,7 +3,6 @@ package presentacion;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -28,14 +27,13 @@ public class ConsultarRecursosView extends JPanel implements View {
 	private JButton btnRetirar;
 	private JTable tablaRecursos;
 	private JScrollPane scrollpaneRecursos;
-	private ConsultarRecursosModel consultarRecursosModel;
+	private ConsultarRecursosModel model;
 	private JScrollPane scrollPaneDescripcion;
 	private JTextArea taDescripcion;
-	private boolean detallesEnabled;
 
 	public ConsultarRecursosView(ConsultarRecursosModel consultarRecursosModel) {
 		
-		this.consultarRecursosModel = consultarRecursosModel;
+		this.model = consultarRecursosModel;
 		
 		btnDetalles = new JButton("detalles");
 		btnAveria = new JButton("averia");
@@ -43,25 +41,13 @@ public class ConsultarRecursosView extends JPanel implements View {
 		btnRetirar = new JButton("retirar");
 		
 		setLayout(new BorderLayout());
-		
 		setBorder(BorderFactory.createTitledBorder("CONSULTAR TUS RECURSOS"));
 		
 		tablaRecursos = new JTable(consultarRecursosModel);
 		scrollpaneRecursos = new JScrollPane(tablaRecursos);
-		tablaRecursos.setFillsViewportHeight(true);
 		
 		taDescripcion = new JTextArea();
-		taDescripcion.setWrapStyleWord(true);
-		taDescripcion.setEditable(false);
-		taDescripcion.setFont(getFont());
-		taDescripcion.setLineWrap(true);
-		taDescripcion.setBackground(getBackground());
 		scrollPaneDescripcion = new JScrollPane(taDescripcion);
-		scrollPaneDescripcion.setBorder(BorderFactory.createTitledBorder("descripcion"));
-		scrollPaneDescripcion.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scrollPaneDescripcion.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
-		add(scrollpaneRecursos,BorderLayout.CENTER);
 		
 		JPanel panelBotones = new JPanel();
 		panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.X_AXIS));
@@ -69,21 +55,54 @@ public class ConsultarRecursosView extends JPanel implements View {
 		panelBotones.add(btnAveria);
 		panelBotones.add(btnMontaje);
 		panelBotones.add(btnRetirar);
-		personalizarBotonesOperaciones();
 		
+		add(scrollpaneRecursos,BorderLayout.CENTER);
 		add(panelBotones, BorderLayout.SOUTH);
 		
 		btnDetalles.addActionListener(e -> btnDetallesPressed.notifyAllObservers());
 		btnAveria.addActionListener(e -> btnAveriaPressed.notifyAllObservers());
 		btnMontaje.addActionListener(e -> btnMontajePressed.notifyAllObservers());
 		btnRetirar.addActionListener(e -> btnRetirarPressed.notifyAllObservers());
-	}
-	
-	@Override
-	public void updateView() {
+		tablaRecursos.getSelectionModel().addListSelectionListener((e)->cambiarBotones());
+		
+		personalizarUI();
 		
 	}
 	
+	private void personalizarUI() {
+		tablaRecursos.setFillsViewportHeight(true);
+		taDescripcion.setWrapStyleWord(true);
+		taDescripcion.setEditable(false);
+		taDescripcion.setFont(getFont());
+		taDescripcion.setLineWrap(true);
+		taDescripcion.setBackground(getBackground());
+		scrollPaneDescripcion.setBorder(BorderFactory.createTitledBorder("descripcion"));
+		scrollPaneDescripcion.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPaneDescripcion.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		btnDetalles.setEnabled(false);
+		btnAveria.setEnabled(false);
+		btnMontaje.setEnabled(false);
+		btnRetirar.setEnabled(false);	
+
+		personalizarBotonesOperaciones();
+	}
+
+	@Override
+	public void updateView() {
+		cambiarBotones();
+		if(model.getDetailsState()) mostrarDetalles();
+		else ocultarDetalles();
+	}
+	
+	private void cambiarBotones() {
+		int selectedRow = tablaRecursos.getSelectedRow();
+		boolean state = (selectedRow  >= 0 && selectedRow < model.getRowCount());
+		btnDetalles.setEnabled(state);
+		btnAveria.setEnabled(state);
+		btnMontaje.setEnabled(state);
+		btnRetirar.setEnabled(state);
+	}
+
 	private void personalizarBotonesOperaciones() {
 		/* expandir automaticamente horizontalmente */
 		btnDetalles.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
@@ -107,18 +126,16 @@ public class ConsultarRecursosView extends JPanel implements View {
 
 	public void mostrarDetalles() {
 		if(tablaRecursos.getSelectedRow() < 0) return;
-		setDetallesEnabled(true);
 		remove(scrollpaneRecursos);
 		add(scrollPaneDescripcion);
 		taDescripcion.setText("");
-		taDescripcion.setText(consultarRecursosModel.getListaRecursos().get(getSelectedItemIndex()).getDescripcion());
+		taDescripcion.setText(model.getListaRecursos().get(getSelectedItemIndex()).getDescripcion());
 		btnDetalles.setText("ocultar detalles");
 		revalidate();
 		repaint();
 	}
 	
 	public void ocultarDetalles() {
-		setDetallesEnabled(false);
 		remove(scrollPaneDescripcion);
 		add(scrollpaneRecursos);
 		btnDetalles.setText("detalles");
@@ -126,34 +143,8 @@ public class ConsultarRecursosView extends JPanel implements View {
 		repaint();
 	}
 
-	public boolean isDetallesEnabled() {
-		return detallesEnabled;
-	}
-
-	public void setDetallesEnabled(boolean detallesEnabled) {
-		this.detallesEnabled = detallesEnabled;
-	}
-
-	public void mostrarAsistenteAveria() {
-		// TODO Auto-generated method stub
-	}
-
-	public void mostraAsistenteMontaje() {
-		// TODO Auto-generated method stub
-	}
-
 	public int getSelectedItemIndex() {
 		return tablaRecursos.getSelectedRow();
 	}
 	
 }
-
-/*
- * con jlist listaRecursos = new
- * JList<RecursoAudioVisual>(consultarRecursosModel);
- * listaRecursos.setVisibleRowCount(100);
- * listaRecursos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
- * listaRecursos.setLayoutOrientation(JList.VERTICAL);
- * listaRecursos.setCellRenderer(new CellRecurso()); listaRecursosPane = new
- * JScrollPane(listaRecursos);
- */

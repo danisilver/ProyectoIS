@@ -33,11 +33,11 @@ public class Compra {
 		this.fechaAdquisicion = fechaAdquisicion;
 	}
 
-	public RecursoAudioVisual getIdRecurso() {
+	public RecursoAudioVisual getRecurso() {
 		return idRecurso;
 	}
 
-	public void setIdRecurso(RecursoAudioVisual idRecurso) {
+	public void setRecurso(RecursoAudioVisual idRecurso) {
 		this.idRecurso = idRecurso;
 	}
 }

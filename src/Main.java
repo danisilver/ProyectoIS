@@ -1,10 +1,9 @@
-package presentacion;
+
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.logger.LocalLog;
 import com.j256.ormlite.support.ConnectionSource;
 
 import negocio.MainModel;
@@ -18,7 +17,6 @@ public class Main {
 			connectionSource = new JdbcConnectionSource(databaseUrl);
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) { e.printStackTrace(); }
-		System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
 	}
 	
 	public static void main(String[] args){

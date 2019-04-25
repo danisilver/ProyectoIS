@@ -16,4 +16,9 @@ public class MainModel implements Model {
 		this.titulo = titulo;
 		changeTitleEvent.notifyAllObservers();
 	}
+
+	@Override
+	public boolean isValid() {
+		return true;
+	}
 }
